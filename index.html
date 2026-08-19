@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
+
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Orientation — Métiers & Adaptations</title>
+    <title>Espace Orientation — Métiers &amp; Adaptations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&amp;family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&amp;family=Open+Sans:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -557,6 +557,23 @@
             border-color: #16a34a;
         }
 
+        .spore-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 330;
+            width: 64px;
+            height: 32px;
+            background-image: url('./assets/Mush_Poison.png');
+            background-size: 1000% 100%;
+            image-rendering: pixelated;
+            animation: playSpore 0.55s steps(9) forwards;
+            transform: translate(-50%, -100%);
+        }
+
+        @keyframes playSpore {
+            0% { background-position: 0% 0; }
+            100% { background-position: 100% 0; }
+        }
         /* MUSHROOM SPRITE CONTAINER */
         #catContainer {
             position: fixed;
@@ -621,14 +638,14 @@
             }
         }
     </style>
-</head>
-<body>
+
+
 
     <header class="hero-section">
         <div class="hero-content">
-            <span class="hero-subtitle">Espace d'Orientation & Adaptations</span>
+            <span class="hero-subtitle">Espace d'Orientation &amp; Adaptations</span>
             <h1 class="hero-title" id="mainHeroTitle">Trouver un métier au rythme de ta santé</h1>
-            <p class="hero-desc" id="mainHeroDesc">Secteurs Végétal, Création & Petite Enfance / Animation. Explore les opportunités concrètes selon leur niveau d'aménagement et ton volume horaire souhaité.</p>
+            <p class="hero-desc" id="mainHeroDesc">Secteurs Végétal, Création &amp; Petite Enfance / Animation. Explore les opportunités concrètes selon leur niveau d'aménagement et ton volume horaire souhaité.</p>
             
             <button id="funToggleBtn" onclick="toggleFunMode()" class="ghost-btn">
                 🎈 Oh non, c'est trop sérieux ici !
@@ -652,7 +669,7 @@
             <span class="panel-title">⏱️ Sélectionne ton volume horaire / rythme par semaine :</span>
             <div class="radio-group-row">
                 <label class="custom-radio">
-                    <input type="radio" name="rhythmFilter" value="all" checked onchange="handleRhythmChange('all')">
+                    <input type="radio" name="rhythmFilter" value="all" checked="" onchange="handleRhythmChange('all')">
                     <span class="radio-label">Tous les rythmes</span>
                 </label>
                 <label class="custom-radio">
@@ -705,7 +722,7 @@
     <!-- Modal Detail View -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-card">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <button class="close-modal" onclick="closeModal()">×</button>
             <div id="modalContent"></div>
         </div>
     </div>
@@ -719,7 +736,6 @@
             <button class="char-opt-btn active" onclick="changeMascotTheme('reg', this)">🍄 Régulier</button>
             <button class="char-opt-btn" onclick="changeMascotTheme('spotted', this)">🍄 Tacheté</button>
             <button class="char-opt-btn" onclick="changeMascotTheme('spike', this)">🍄 Épineux</button>
-            <button class="char-opt-btn" onclick="changeMascotTheme('poison', this)">🌿 Spores</button>
         </div>
 
         <div class="game-controls">
@@ -1226,7 +1242,7 @@
             return canvas.toDataURL();
         }
 
-        ['reg', 'spotted', 'spike', 'poison'].forEach(t => {
+        ['reg', 'spotted', 'spike'].forEach(t => {
             MUSHROOM_DATA_URIS[t] = generateMushroomSpritesheetURI(t);
         });
 
@@ -1309,7 +1325,6 @@
                 'reg': './assets/Mushroom_Reg.png',
                 'spotted': './assets/Mushroom_Spotted.png',
                 'spike': './assets/Mushroom_spike.png',
-                'poison': './assets/Mush_Poison.png'
             };
 
             const targetAsset = assetMap[themeKey] || assetMap['reg'];
@@ -1369,9 +1384,21 @@
         /* FLOWER FX PROPAGATION */
         const BLOOM_ICONS = ['🌸', '🌼', '🌱', '⭐', '🍄', '🌿', '✨', '🌺', '🍃', '🌻'];
 
+        function spawnSporeEffect(x, y) {
+            if (!isFunMode) return;
+            const el = document.createElement('div');
+            el.className = 'spore-particle';
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            document.body.appendChild(el);
+            setTimeout(() => { if (el && el.parentNode) el.parentNode.removeChild(el); }, 550);
+         }
+
         function spawnBloomEffect(x, y, isBig = false, isSubtle = false) {
             if (!isFunMode) return;
-            
+            if (!isSubtle) {
+            spawnSporeEffect(x, y);
+         }
             // Quantité et durée ajustées pour éviter la surcharge en jeu classique
             const count = isBig ? 5 : (isSubtle ? 1 : 2);
             const duration = isBig ? 2500 : (isSubtle ? 1200 : 1600);
@@ -1648,5 +1675,4 @@
             });
         }
     </script>
-</body>
-</html>
+
